@@ -1,0 +1,16 @@
+name: Keep Neon Database Alive
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  ping-db:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wake up Neon
+        env:
+          DB_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+          psql "$DB_URL" -c "SELECT 1;"
